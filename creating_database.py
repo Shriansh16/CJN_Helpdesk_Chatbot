@@ -1,6 +1,7 @@
 import os
 import time
 from pdf_loader import *
+from utils import *
 from dotenv import load_dotenv
 from pinecone import Pinecone as PineconeClient
 from langchain.vectorstores import Pinecone
@@ -14,13 +15,11 @@ from langchain.embeddings import OpenAIEmbeddings
 
 
 load_dotenv()
-KEY=os.getenv("OPENAI_API_KEY")
-embeddings=OpenAIEmbeddings(api_key=KEY)
 pc = PineconeClient(
     api_key=os.environ.get("PINECONE_API_KEY")
 )
 extracted_data=load_pdf("data/")
-#embeddings=download_embeddings()
+embeddings=download_embeddings()
 
 
 spec = ServerlessSpec(
@@ -35,7 +34,7 @@ if index_name not in existing_indexes:
     # if does not exist, create index
     pc.create_index(
         index_name,
-        dimension=1536,  # dimensionality of ada 002
+        dimension=384,  # dimensionality of ada 002
         metric='cosine',
         spec=spec
     )
