@@ -6,6 +6,8 @@ from pinecone import Pinecone as PineconeClient
 from langchain.vectorstores import Pinecone
 from langchain.embeddings import HuggingFaceEmbeddings
 from groq import Groq
+from langchain.document_loaders import DirectoryLoader
+from langchain.document_loaders import PyPDFLoader
 load_dotenv()
 pkey=os.getenv("PINECONE_API_KEY")
 
@@ -34,6 +36,38 @@ def find_match(input):
                        )
     result=vectorstore.similarity_search(
     input,  # our search query
-    k=6  # return 6 most relevant docs
+    k=5  # return 6 most relevant docs
       )
     return result
+def query_refiner(conversation, query):
+    api_key1 = ""
+    client = Groq(api_key=api_key1)
+    response = client.chat.completions.create(
+    model="gemma-7b-it",
+    messages=[{"role": "system", "content": "You are a specialized question builder. Your task is to generate a relevant and concise question based solely on the provided conversation log and user query."},
+           {"role": "user", "content": f"Given the following user query and conversation log, formulate a question that would be the most relevant to provide the user with an answer from a knowledge base.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query: If the query is independent of the conversation log, focus on the core of the user’s question and generate a relevant question that stands alone."}
+    ],
+    temperature=0.5,
+    max_tokens=256,
+    top_p=1,
+    stream=False,
+    stop=None,
+     )
+    return response.choices[0].message.content
+def get_conversation_string():
+    conversation_string = ""
+    # Get the last two exchanges
+    requests = st.session_state['requests'][-2:]  # Last two requests
+    responses = st.session_state['responses'][-2:]  # Last two responses
+    
+    # Iterate over the two most recent exchanges
+    for i in range(len(requests)):
+        conversation_string += "Human: " + requests[i] + "\n"
+        conversation_string += "Bot: " + responses[i] + "\n"
+    
+    return conversation_string
+
+def load_pdf(pdf_path):
+    loader=DirectoryLoader(pdf_path,glob='*.pdf',loader_cls=PyPDFLoader)
+    document=loader.load()
+    return document

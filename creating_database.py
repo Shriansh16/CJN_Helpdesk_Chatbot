@@ -10,8 +10,6 @@ import tiktoken
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from tqdm.auto import tqdm
 from uuid import uuid4
-from langchain.embeddings import OpenAIEmbeddings
-
 
 
 load_dotenv()
