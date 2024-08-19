@@ -40,12 +40,12 @@ def find_match(input):
       )
     return result
 def query_refiner(conversation, query):
-    api_key1 = ""
+    api_key1 = "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"
     client = Groq(api_key=api_key1)
     response = client.chat.completions.create(
     model="gemma-7b-it",
-    messages=[{"role": "system", "content": "You are a specialized question builder. Your task is to generate a relevant and concise question based solely on the provided conversation log and user query."},
-           {"role": "user", "content": f"Given the following user query and conversation log, formulate a question that would be the most relevant to provide the user with an answer from a knowledge base.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query: If the query is independent of the conversation log, focus on the core of the user’s question and generate a relevant question that stands alone."}
+    messages=[{"role": "system", "content": "You are a specialized question builder. Your task is to make necessary changes to the question provided by the user according to the given conversation log."},
+           {"role": "user", "content": f"Given the following user query and conversation log, refine the query to make it most relevant for retrieving an answer from a knowledge base.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query:"}
     ],
     temperature=0.5,
     max_tokens=256,

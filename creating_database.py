@@ -1,6 +1,6 @@
 import os
 import time
-from pdf_loader import *
+#from pdf_loader import *
 from utils import *
 from dotenv import load_dotenv
 from pinecone import Pinecone as PineconeClient
