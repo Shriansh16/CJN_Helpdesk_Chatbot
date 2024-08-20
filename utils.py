@@ -40,7 +40,7 @@ def find_match(input):
       )
     return result
 def query_refiner(conversation, query):
-    api_key1 = "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"
+    api_key1 = ""
     client = Groq(api_key=api_key1)
     response = client.chat.completions.create(
     model="gemma-7b-it",
