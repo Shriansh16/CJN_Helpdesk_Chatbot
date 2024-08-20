@@ -15,7 +15,7 @@ from utils import *
 
 
 from langchain_groq import ChatGroq
-api_key1=""
+api_key1=st.secrets["GROQ_API_KEY"]
 # Streamlit setup
 
 st.subheader("HELPDESK CHAT")
