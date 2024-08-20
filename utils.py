@@ -44,8 +44,8 @@ def query_refiner(conversation, query):
     client = Groq(api_key=api_key1)
     response = client.chat.completions.create(
     model="gemma-7b-it",
-    messages=[{"role": "system", "content": "You are a specialized question builder. Your task is to refine the user's question based on the given conversation log, ensuring that it is relevant to the context. If the query is unrelated to the conversation, indicate this and suggest a relevant query or return the original query unchanged."},
-              {"role": "user", "content": "Given the following user query and conversation log, refine the query to make it most relevant for retrieving an answer from a knowledge base.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query:"}
+    messages=[{"role": "system", "content": "You are a specialized question builder. Your task is to refine the user's question based on the given conversation log, ensuring it is relevant to the context. If the query is independent of the conversation log, return the query unchanged. If either the conversation log or the query is missing, proceed by returning the original query without any refinement."},
+              {"role": "user", "content": "Given the following user query and conversation log, refine the query to make it most relevant for retrieving an answer from a knowledge base. If the query is independent of the conversation log, or if the conversation log or query is missing, return the original query unchanged.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query:"}
     ],
     temperature=0.5,
     max_tokens=256,
