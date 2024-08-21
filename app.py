@@ -15,7 +15,7 @@ from utils import *
 
 
 from langchain_groq import ChatGroq
-api_key1=st.secrets["GROQ_API_KEY"]
+api_key1=""
 # Streamlit setup
 
 st.subheader("HELPDESK CHAT")
@@ -54,11 +54,11 @@ with text_container:
 
     if user_query:
         with st.spinner("typing..."):
-            conversation_string = get_conversation_string()
-            refined_query = query_refiner(conversation_string, user_query)
+            #conversation_string = get_conversation_string()
+            #refined_query = query_refiner(conversation_string, user_query)
             #refined_query=refined_query+" "+user_query
-            st.write(refined_query)
-            context = find_match(refined_query)
+            #st.write(refined_query)
+            context = find_match(user_query)
             response = conversation.predict(input=f"Context:\n{context}\n\nQuery:\n{user_query}")
             response = re.sub(r'(?i)according to the provided context,', '', response)
             response = re.sub(r'(?i)according to the provided documents,', '', response)

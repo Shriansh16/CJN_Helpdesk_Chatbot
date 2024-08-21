@@ -9,7 +9,7 @@ from groq import Groq
 from langchain.document_loaders import DirectoryLoader
 from langchain.document_loaders import PyPDFLoader
 load_dotenv()
-pkey=st.secrets["PINECONE_API_KEY"]
+pkey=""
 
 
 import pickle
@@ -40,7 +40,9 @@ def find_match(input):
       )
     return result
 def query_refiner(conversation, query):
-    api_key1 = st.secrets["GROQ_API_KEY"]
+  #  if not conversation or not query:
+   #     return query
+    api_key1 = "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"
     client = Groq(api_key=api_key1)
     response = client.chat.completions.create(
     model="gemma-7b-it",
@@ -54,18 +56,13 @@ def query_refiner(conversation, query):
     stop=None,
      )
     return response.choices[0].message.content
-def get_conversation_string():
+"""def get_conversation_string():
     conversation_string = ""
-    # Get the last two exchanges
-    requests = st.session_state['requests'][-2:]  # Last two requests
-    responses = st.session_state['responses'][-2:]  # Last two responses
-    
-    # Iterate over the two most recent exchanges
-    for i in range(len(requests)):
-        conversation_string += "Human: " + requests[i] + "\n"
-        conversation_string += "Bot: " + responses[i] + "\n"
-    
-    return conversation_string
+    for i in range(len(st.session_state['responses'])-1):
+        
+        conversation_string += "Human: "+st.session_state['requests'][i] + "\n"
+        conversation_string += "Bot: "+ st.session_state['responses'][i+1] + "\n"
+    return conversation_string"""
 
 def load_pdf(pdf_path):
     loader=DirectoryLoader(pdf_path,glob='*.pdf',loader_cls=PyPDFLoader)
