@@ -46,8 +46,8 @@ def query_refiner(conversation, query):
     client = Groq(api_key=api_key1)
     response = client.chat.completions.create(
     model="gemma-7b-it",
-    messages=[{"role": "system", "content": "You are a specialized question builder. Your task is to refine the user's question based on the given conversation log, ensuring it is relevant to the context. If the query is independent of the conversation log, return the query unchanged. If either the conversation log or the query is missing, proceed by returning the original query without any refinement."},
-              {"role": "user", "content": "Given the following user query and conversation log, refine the query to make it most relevant for retrieving an answer from a knowledge base. If the query is independent of the conversation log, or if the conversation log or query is missing, return the original query unchanged.\n\nCONVERSATION LOG: \n{conversation}\n\nQuery: {query}\n\nRefined Query:"}
+    messages=[{"role": "system", "content": "If the user's query is unrelated to the conversation context, return it as is. Otherwise, refine the query based on the conversation log."},
+              {"role": "user", "content": f"Given the conversation log:\n{conversation}\n\nand the query:\n{query}\n\nDetermine if the query is relevant. If yes, refine it; if not, return it as is.Please provide only the refined question, without any additional text."}
     ],
     temperature=0.5,
     max_tokens=256,
@@ -56,13 +56,13 @@ def query_refiner(conversation, query):
     stop=None,
      )
     return response.choices[0].message.content
-"""def get_conversation_string():
+def get_conversation_string():
     conversation_string = ""
-    for i in range(len(st.session_state['responses'])-1):
-        
-        conversation_string += "Human: "+st.session_state['requests'][i] + "\n"
-        conversation_string += "Bot: "+ st.session_state['responses'][i+1] + "\n"
-    return conversation_string"""
+    start_index = max(len(st.session_state['responses']) - 2, 0)
+    for i in range(start_index, len(st.session_state['responses']) - 1):        
+        conversation_string += "Human: " + st.session_state['requests'][i] + "\n"
+        conversation_string += "Bot: " + st.session_state['responses'][i+1] + "\n"
+    return conversation_string
 
 def load_pdf(pdf_path):
     loader=DirectoryLoader(pdf_path,glob='*.pdf',loader_cls=PyPDFLoader)

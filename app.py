@@ -34,7 +34,7 @@ if 'buffer_memory' not in st.session_state:
     st.session_state.buffer_memory = ConversationBufferWindowMemory(k=1, return_messages=True)
 
 # Define prompt templates
-system_msg_template = SystemMessagePromptTemplate.from_template(template="""Answer as a friendly helpdesk agent and use the provided context and If the answer is not contained within the text, say 'I'm not sure about that, but I'm here to help with anything else you need!'. Do not say 'According to the provided context' or anything similar. Just give the answer naturally.""")                                                                        
+system_msg_template = SystemMessagePromptTemplate.from_template(template="""Answer as a friendly helpdesk agent and use the provided context to build the answer and If the answer is not contained within the text, say 'I'm not sure about that, but I'm here to help with anything else you need!'. Do not say 'According to the provided context' or anything similar. Just give the answer naturally.""")                                                                        
 human_msg_template = HumanMessagePromptTemplate.from_template(template="{input}")
 
 prompt_template = ChatPromptTemplate.from_messages([system_msg_template, MessagesPlaceholder(variable_name="history"), human_msg_template])
@@ -54,11 +54,13 @@ with text_container:
 
     if user_query:
         with st.spinner("typing..."):
-            #conversation_string = get_conversation_string()
-            #refined_query = query_refiner(conversation_string, user_query)
+            conversation_string = get_conversation_string()
+            refined_query = query_refiner(conversation_string, user_query)
+            refined_query = re.sub(r'(?i)refined query', '', refined_query)
             #refined_query=refined_query+" "+user_query
-            #st.write(refined_query)
-            context = find_match(user_query)
+            st.write(refined_query)
+            st.write(conversation_string)
+            context = find_match(refined_query)
             response = conversation.predict(input=f"Context:\n{context}\n\nQuery:\n{user_query}")
             response = re.sub(r'(?i)according to the provided context,', '', response)
             response = re.sub(r'(?i)according to the provided documents,', '', response)
@@ -66,6 +68,8 @@ with text_container:
             response = re.sub(r'(?i)according to the document', '', response)
             response = re.sub(r'(?i)based on the provided context,', '', response)
             response = re.sub(r'(?i)based on the provided document,', '', response)
+            response = re.sub(r'(?i)according to the context,', '', response)
+
 
         
         # Append the new query and response to the session state  
