@@ -57,7 +57,10 @@ with text_container:
             conversation_string = get_conversation_string()
             refined_query = query_refiner(conversation_string, user_query)
             refined_query = re.sub(r'(?i)refined query', '', refined_query)
-            #refined_query=refined_query+" "+user_query
+            refined_query = re.sub(r'(?i)relevant', '', refined_query)
+            refined_query = re.sub(r'(?i)irrelevant', '', refined_query)
+            refined_query = re.sub(r'(?i)Refined question:', '', refined_query)
+            #refined_query=refined_query+" "+user_query   
             #st.write(refined_query)
             #st.write(conversation_string)
             context = find_match(refined_query)
