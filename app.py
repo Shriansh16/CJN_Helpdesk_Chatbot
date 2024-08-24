@@ -58,8 +58,8 @@ with text_container:
             refined_query = query_refiner(conversation_string, user_query)
             refined_query = re.sub(r'(?i)refined query', '', refined_query)
             #refined_query=refined_query+" "+user_query
-            st.write(refined_query)
-            st.write(conversation_string)
+            #st.write(refined_query)
+            #st.write(conversation_string)
             context = find_match(refined_query)
             response = conversation.predict(input=f"Context:\n{context}\n\nQuery:\n{user_query}")
             response = re.sub(r'(?i)according to the provided context,', '', response)
