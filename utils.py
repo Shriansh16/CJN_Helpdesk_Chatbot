@@ -9,7 +9,7 @@ from groq import Groq
 from langchain.document_loaders import DirectoryLoader
 from langchain.document_loaders import PyPDFLoader
 load_dotenv()
-pkey=""
+pkey=os.getenv("PINECONE_API_KEY")
 
 
 import pickle
@@ -42,7 +42,7 @@ def find_match(input):
 def query_refiner(conversation, query):
   #  if not conversation or not query:
    #     return query
-    api_key1 = "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"
+    api_key1 = os.getenv("GROQ_API_KEY")
     client = Groq(api_key=api_key1)
     response = client.chat.completions.create(
     model="gemma-7b-it",
